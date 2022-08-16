@@ -1,26 +1,36 @@
 import React from "react";
-import { Card, CardImg, CardText, CardBody, CardTitle } from "reactstrap";
+import {
+  Card,
+  CardImg,
+  CardText,
+  CardBody,
+  CardTitle,
+  Breadcrumb,
+  BreadcrumbItem,
+} from "reactstrap";
+import { Link } from "react-router-dom";
 
 function RenderComments({ dish }) {
   let options = { year: "numeric", month: "short", day: "numeric" };
 
-  const posts = dish.map((post) => {
-    return (
-      <li key={post.id}>
-        <p>{post.comment}</p>
-        <p className="font-italic">
-          -- {post.author},
-          <span>
-            {new Date(post.date).toLocaleDateString("en-US", options)}
-          </span>
-        </p>
-      </li>
-    );
-  });
   return (
     <div className="col-12 col-md-5 m-1">
       <h4>Comments:</h4>
-      <ul className="list-unstyled">{posts}</ul>
+      <ul className="list-unstyled">
+        {dish.map((coms) => {
+          return (
+            <li key={coms.id}>
+              <p>{coms.comment}</p>
+              <p className="font-italic">
+                -- {coms.author},&nbsp;
+                <span>
+                  {new Date(coms.date).toLocaleDateString("en-US", options)}
+                </span>
+              </p>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }
@@ -40,16 +50,25 @@ function RenderDish({ dish }) {
 }
 
 function DishDetail(props) {
-  //const dish = props.dish;
+  const coms = props.comments.filter((item) => item.dishId === props.dish.id);
 
   if (props.dish === null) {
     return <div></div>;
   } else {
     return (
       <div className="container">
+        <Breadcrumb>
+          <BreadcrumbItem>
+            <Link to="/menu">Menu</Link>
+          </BreadcrumbItem>
+          <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+        </Breadcrumb>
+        <div className="col-12">
+          <h3>{props.dish.name}</h3>
+        </div>
         <div className="row">
           <RenderDish dish={props.dish} />
-          <RenderComments dish={props.dish.comments} />
+          <RenderComments dish={coms} />
         </div>
       </div>
     );
