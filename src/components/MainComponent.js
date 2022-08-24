@@ -14,6 +14,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { connect } from "react-redux";
+import { addComment } from "../redux/ActionCreators";
 
 function withRouter(Component) {
   function ComponentWithRouterProp(props) {
@@ -34,6 +35,11 @@ const mapStateToProps = (state) => {
     leaders: state.leaders,
   };
 };
+
+const mapDispatchToProps = (dispatch) => ({
+  addComment: (dishId, rating, author, comment) =>
+    dispatch(addComment(dishId, rating, author, comment)),
+});
 
 class Main extends Component {
   constructor(props) {
@@ -58,6 +64,7 @@ class Main extends Component {
         <DishDetail
           dish={this.props.dishes[dishId]}
           comments={this.props.comments}
+          addComment={this.props.addComment}
         />
       );
     };
@@ -87,4 +94,4 @@ class Main extends Component {
   }
 }
 
-export default withRouter(connect(mapStateToProps)(Main));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));

@@ -18,14 +18,16 @@ import {
 import { Link } from "react-router-dom";
 import { LocalForm, Control, Errors } from "react-redux-form";
 
-function handleSubmit(values) {
-  console.log("current state is: " + JSON.stringify(values));
-  alert("current state is: " + JSON.stringify(values));
+function handleeSubmit(values) {
+  values.addComment(
+    this.props.dishId,
+    values.rating,
+    values.author,
+    values.comment
+  );
 }
 
-function RenderComments({ dish }) {
-  let options = { year: "numeric", month: "short", day: "numeric" };
-
+function CommentForm({ dishId, addComment }) {
   const [toggleComMod, setToggleComMod] = useState(false);
 
   const toggle = () => setToggleComMod(!toggleComMod);
@@ -34,24 +36,12 @@ function RenderComments({ dish }) {
   const maxLength = (len) => (val) => !val || val.length <= len;
   const minLength = (len) => (val) => val && val.length >= len;
 
+  function handleSubmit(values) {
+    addComment(dishId, values.rating, values.name, values.comment);
+  }
+
   return (
-    <div className="col-12 col-md-5 m-1">
-      <h4>Comments:</h4>
-      <ul className="list-unstyled">
-        {dish.map((coms) => {
-          return (
-            <li key={coms.id}>
-              <p>{coms.comment}</p>
-              <p className="font-italic">
-                -- {coms.author},&nbsp;
-                <span>
-                  {new Date(coms.date).toLocaleDateString("en-US", options)}
-                </span>
-              </p>
-            </li>
-          );
-        })}
-      </ul>
+    <>
       <Button onClick={toggle} className="fa fa-pencil bg-white text-dark">
         {" "}
         Submit Comment
@@ -131,6 +121,32 @@ function RenderComments({ dish }) {
           </LocalForm>
         </ModalBody>
       </Modal>
+    </>
+  );
+}
+
+function RenderComments({ comments, addComment, dishId }) {
+  let options = { year: "numeric", month: "short", day: "numeric" };
+
+  return (
+    <div className="col-12 col-md-5 m-1">
+      <h4>Comments:</h4>
+      <ul className="list-unstyled">
+        {comments.map((comment) => {
+          return (
+            <li key={comment.id}>
+              <p>{comment.comment}</p>
+              <p className="font-italic">
+                -- {comment.author},&nbsp;
+                <span>
+                  {new Date(comment.date).toLocaleDateString("en-US", options)}
+                </span>
+              </p>
+            </li>
+          );
+        })}
+      </ul>
+      <CommentForm dishId={dishId} addComment={addComment} />
     </div>
   );
 }
@@ -168,7 +184,11 @@ function DishDetail(props) {
         </div>
         <div className="row">
           <RenderDish dish={props.dish} />
-          <RenderComments dish={coms} />
+          <RenderComments
+            comments={coms}
+            addComment={props.addComment}
+            dishId={props.dish.id}
+          />
         </div>
       </div>
     );
