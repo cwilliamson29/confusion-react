@@ -6,26 +6,9 @@ import Contact from "./ContactComponent";
 import DishDetail from "./dishDetail";
 import Header from "./HeaderComponent";
 import Footer from "./FooterComponent";
-import {
-  Routes,
-  Route,
-  useParams,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { Redirect, Route, Switch, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { addComment } from "../redux/ActionCreators";
-
-function withRouter(Component) {
-  function ComponentWithRouterProp(props) {
-    let location = useLocation();
-    let navigate = useNavigate();
-    let params = useParams();
-    return <Component {...props} router={{ location, navigate, params }} />;
-  }
-
-  return ComponentWithRouterProp;
-}
 
 const mapStateToProps = (state) => {
   return {
@@ -57,14 +40,17 @@ class Main extends Component {
       );
     };
 
-    const DishWithId = () => {
-      const { dishId } = useParams();
-      //console.log(this.state.comments.map() + "maincomp");
+    const DishWithId = ({ match }) => {
       return (
         <DishDetail
-          dish={this.props.dishes[dishId]}
-          comments={this.props.comments}
-          addComment={this.props.addComment}
+          dish={
+            this.props.dishes.filter(
+              (dish) => dish.id === parseInt(match.params.dishId, 10)
+            )[0]
+          }
+          comments={this.props.comments.filter(
+            (comment) => comment.dishId === parseInt(match.params.dishId, 10)
+          )}
         />
       );
     };
@@ -72,21 +58,22 @@ class Main extends Component {
     return (
       <div>
         <Header />
-        <Routes>
-          <Route path="home" element={<HomePage />} />
-          <Route path="/" element={<HomePage />} />
+        <Switch>
+          <Route path="/home" component={HomePage} />
           <Route
-            path="aboutus"
-            element={<About leaders={this.props.leaders} />}
+            exact
+            path="/aboutus"
+            component={() => <About leaders={this.props.leaders} />}
           />
           <Route
             exact
-            path="menu"
-            element={<Menu dishes={this.props.dishes} />}
+            path="/menu"
+            component={() => <Menu dishes={this.props.dishes} />}
           />
-          <Route path="menu/:dishId" element={<DishWithId />} />
-          <Route exact path="contactus" element={<Contact />} />
-        </Routes>
+          <Route path="/menu/:dishId" component={DishWithId} />
+          <Route exact path="/contactus" component={Contact} />
+          <Redirect to="/home" />
+        </Switch>
 
         <Footer />
       </div>

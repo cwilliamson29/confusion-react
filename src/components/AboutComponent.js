@@ -11,34 +11,26 @@ import { Link } from "react-router-dom";
 
 function RenderLeader({ leader }) {
   return (
-    <div key={leader.id} className="container">
-      <Media className="container">
-        <Media className="row">
-          <Media className="col-md-2">
-            <Media src={leader.image} alt={leader.name} />
-          </Media>
-        </Media>
-        <Media className="flex-column ml-5">
-          <Media className="row">
-            <Media heading className="col-md font-weight-bold ">
-              {leader.name}
-            </Media>
-          </Media>
-          <Media className="row">
-            <Media className="col-md mb-1">{leader.designation}</Media>
-          </Media>
-          <Media className="row">
-            <Media className="col-md mb-5">{leader.description}</Media>
-          </Media>
-        </Media>
+    <Media className="mt-4">
+      <Media left className="col-2">
+        <Media object src={leader.image} alt={leader.name} />
       </Media>
-    </div>
+      <Media right body className="col-10">
+        <Media heading>{leader.name}</Media>
+        <p>{leader.designation}</p>
+        <p>{leader.description}</p>
+      </Media>
+    </Media>
   );
 }
 
 function About(props) {
   const leaders = props.leaders.map((leader) => {
-    return <RenderLeader key={leader.id} leader={leader} />;
+    return (
+      <div key={leader.id}>
+        <RenderLeader leader={leader} />
+      </div>
+    );
   });
 
   return (
@@ -118,7 +110,6 @@ function About(props) {
         </div>
         <div className="col-12">
           <Media list>{leaders}</Media>
-          <RenderLeader leader={props.leaders} />
         </div>
       </div>
     </div>

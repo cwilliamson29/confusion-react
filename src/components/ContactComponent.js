@@ -4,7 +4,6 @@ import {
   BreadcrumbItem,
   Button,
   Label,
-  Input,
   Col,
   Row,
 } from "reactstrap";
@@ -33,16 +32,19 @@ class Contact extends Component {
   render() {
     return (
       <div className="container">
-        <Breadcrumb>
-          <BreadcrumbItem>
-            <Link to="/home">Home</Link>{" "}
-          </BreadcrumbItem>
-          <BreadcrumbItem active>Contact Us</BreadcrumbItem>
-        </Breadcrumb>
-        <div className="col-12">
-          <h3>Contact Us</h3>
-          <hr />
+        <div className="row">
+          <Breadcrumb>
+            <BreadcrumbItem>
+              <Link to="/home">Home</Link>{" "}
+            </BreadcrumbItem>
+            <BreadcrumbItem active>Contact Us</BreadcrumbItem>
+          </Breadcrumb>
+          <div className="col-12">
+            <h3>Contact Us</h3>
+            <hr />
+          </div>
         </div>
+
         <div className="row row-content">
           <div className="col-12">
             <h3>Location Information</h3>
@@ -76,7 +78,7 @@ class Contact extends Component {
               >
                 <i className="fa fa-phone"></i> Call
               </a>
-              <a role="button" className="btn btn-info">
+              <a role="button" className="btn btn-info" href="/">
                 <i className="fa fa-skype"></i> Skype
               </a>
               <a
