@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import {
   Card,
   CardImg,
-  CardBody,
   CardText,
   CardTitle,
   Breadcrumb,
@@ -32,7 +31,6 @@ class CommentForm extends Component {
       isModalOpen: false,
     };
     this.toggleModal = this.toggleModal.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   toggleModal() {
@@ -41,15 +39,9 @@ class CommentForm extends Component {
     });
   }
 
-  handleSubmit(values) {
+  handleComment(values) {
     this.toggleModal();
-    const ratingChecked = values.rating ? values.rating : 1;
-    this.props.postComment(
-      this.props.dishId,
-      ratingChecked,
-      values.author,
-      values.comment
-    );
+    alert(JSON.stringify(values));
   }
 
   render() {
@@ -60,7 +52,7 @@ class CommentForm extends Component {
         <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
           <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
           <ModalBody>
-            <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
+            <LocalForm onSubmit={(value) => this.handleComment(value)}>
               <Row className="form-group">
                 <Label htmlFor="rating" md={2}>
                   Rating
@@ -68,15 +60,14 @@ class CommentForm extends Component {
                 <Col md={10}>
                   <Control.select
                     model=".rating"
-                    id="rating"
                     name="rating"
                     className="form-control col-4"
                   >
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
+                    <option>1 Rating</option>
+                    <option>2 Rating</option>
+                    <option>3 Rating</option>
+                    <option>4 Rating</option>
+                    <option>5 Rating</option>
                   </Control.select>
                 </Col>
               </Row>
@@ -86,9 +77,9 @@ class CommentForm extends Component {
                 </Label>
                 <Col md={10}>
                   <Control.text
-                    model=".author"
-                    id="author"
-                    name="author"
+                    model=".name"
+                    id="name"
+                    name="name"
                     placeholder="Your Name"
                     validators={{
                       required,
@@ -98,7 +89,7 @@ class CommentForm extends Component {
                   />
                   <Errors
                     className="text-danger"
-                    model=".author"
+                    model=".name"
                     show="touched"
                     messages={{
                       required: "Name req",
@@ -137,42 +128,40 @@ class CommentForm extends Component {
   }
 }
 
-function RenderComments({ comments, postComment, dishId }) {
-  let options = { year: "numeric", month: "short", day: "numeric" };
+function RenderComments({ comments }) {
+  const renderedComments = comments.map((comment) => {
+    return (
+      <div>
+        <CardText>{comment.comment} </CardText>
+        <CardText>
+          --{comment.author} ,{" "}
+          {new Intl.DateTimeFormat("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "2-digit",
+          }).format(new Date(Date.parse(comment.date)))}
+        </CardText>
+      </div>
+    );
+  });
 
   return (
-    <div className="col-12 col-md-5 m-1">
-      <h4>Comments:</h4>
-      <ul className="list-unstyled">
-        {comments.map((comment) => {
-          return (
-            <li key={comment.id}>
-              <p>{comment.comment}</p>
-              <p className="font-italic">
-                -- {comment.author},&nbsp;
-                <span>
-                  {new Date(comment.date).toLocaleDateString("en-US", options)}
-                </span>
-              </p>
-            </li>
-          );
-        })}
-      </ul>
-      <CommentForm dishId={dishId} postComment={postComment} />
+    <div>
+      {renderedComments}
+      <CommentForm />
     </div>
   );
 }
+
 function RenderDish({ dish }) {
   return (
-    <div key={dish.id} className="col-12 col-md-5 m-1">
+    <Card>
+      <CardImg width="100%" object src={baseUrl + dish.image} alt={dish.name} />
       <Card>
-        <CardImg width="100%" src={dish.image} alt={dish.name} />
-        <CardBody>
-          <CardTitle>{dish.name}</CardTitle>
-          <CardText>{dish.description}</CardText>
-        </CardBody>
+        <CardTitle>{dish.name}</CardTitle>
+        <CardText>{dish.description}</CardText>
       </Card>
-    </div>
+    </Card>
   );
 }
 
@@ -216,11 +205,7 @@ const DishDetail = (props) => {
           <RenderDish dish={props.dish} />
         </div>
         <div className="col-12 col-md-5 m-1">
-          <RenderComments
-            comments={props.comments}
-            postComment={props.postComment}
-            dishId={props.dish.id}
-          />
+          <RenderComments comments={props.comments} />
         </div>
       </div>
     </div>
