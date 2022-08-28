@@ -141,7 +141,7 @@ function RenderComments({ comments, postComment, dishId }) {
   let options = { year: "numeric", month: "short", day: "numeric" };
 
   return (
-    <div className="col-12 col-md-5 m-1">
+    <div>
       <h4>Comments:</h4>
       <ul className="list-unstyled">
         {comments.map((comment) => {
@@ -164,9 +164,9 @@ function RenderComments({ comments, postComment, dishId }) {
 }
 function RenderDish({ dish }) {
   return (
-    <div key={dish.id} className="col-12 col-md-5 m-1">
+    <div key={dish.id}>
       <Card>
-        <CardImg width="100%" src={dish.image} alt={dish.name} />
+        <CardImg width="100%" src={baseUrl + dish.image} alt={dish.name} />
         <CardBody>
           <CardTitle>{dish.name}</CardTitle>
           <CardText>{dish.description}</CardText>
