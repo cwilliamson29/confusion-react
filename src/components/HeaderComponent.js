@@ -57,7 +57,7 @@ class Header extends Component {
   render() {
     return (
       <>
-        <Navbar dark expand="md" color="primary">
+        <Navbar dark expand="md" className="navBar-dark">
           <div className="container">
             <NavbarToggler onClick={this.toggleNav} />
             <NavbarBrand className="mr-auto" href="/">
