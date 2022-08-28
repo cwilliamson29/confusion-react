@@ -8,12 +8,14 @@ import {
   Media,
 } from "reactstrap";
 import { Link } from "react-router-dom";
+import { baseUrl } from "../shared/baseUrl";
+import { Fade, Stagger } from "react-animation-components";
 
 function RenderLeader({ leader }) {
   return (
     <Media className="mt-4">
       <Media left className="col-2">
-        <Media object src={leader.image} alt={leader.name} />
+        <Media object src={baseUrl + leader.image} alt={leader.name} />
       </Media>
       <Media right body className="col-10">
         <Media heading>{leader.name}</Media>
@@ -25,10 +27,14 @@ function RenderLeader({ leader }) {
 }
 
 function About(props) {
-  const leaders = props.leaders.map((leader) => {
+  const leaders = props.leaders.leaders.map((leader) => {
     return (
       <div key={leader.id}>
-        <RenderLeader leader={leader} />
+        <Stagger in>
+          <Fade in>
+            <RenderLeader leader={leader} />
+          </Fade>
+        </Stagger>
       </div>
     );
   });

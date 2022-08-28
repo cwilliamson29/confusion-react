@@ -27,6 +27,7 @@ export const Promotions = (
         errMess: action.payload,
         promotions: [],
       };
+
     default:
       return state;
   }
